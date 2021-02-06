@@ -65,7 +65,16 @@ module.exports = {
         rules: [
             {
                 test: /\.sass$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader, 
+                        options: {
+                            publicPath: ''
+                        }
+                    },
+                    'css-loader',
+                    'sass-loader'
+                ]
             },
             {
                 test: /\.js$/,
@@ -78,6 +87,15 @@ module.exports = {
                         ]
                     }
                 }
+            },
+            {
+                test: /\.(ttf|eot|svg|gif|woff|woff2)$/,
+                use: [{
+                    loader: 'file-loader', 
+                    options: {
+                        name: '[path][name].[ext]',
+                    }
+                }]
             },
         ]
     }
