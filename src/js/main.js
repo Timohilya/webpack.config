@@ -1,3 +1,5 @@
-import '../sass/main'
+//import '../sass/main'
 
-console.log("12")
+import './components/component'
+
+console.log("main")

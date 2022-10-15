@@ -39,5 +39,8 @@
     "webpack": "^5.21.1",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "devDependencies": {
+    "webpack-fix-style-only-entries": "^0.6.1"
   }
 }

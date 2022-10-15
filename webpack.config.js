@@ -1,15 +1,17 @@
 const path = require('path')
+
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries')
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = !isDev
 
-//
+
 const optimization = () => {
     const config = {
         //Оптимизация общих библеотек из разных файлов 
@@ -29,9 +31,14 @@ const optimization = () => {
 module.exports = {
     context: path.resolve(__dirname, 'src'),
     mode: 'development',
-    entry: ['@babel/polyfill', './js/main.js'],
+    entry: {
+        'js/main': './js/main.js',
+        'js/main2': './js/main2.js',
+        'css/main': './sass/main.sass',
+        'css/main2': './sass/main2.sass',
+    },
     output: {
-        filename: 'bundle.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist')
     },
     optimization: optimization(),
@@ -39,14 +46,21 @@ module.exports = {
         extensions: ['.js', '.sass']
     },
     devServer: {
-        port: 4200
+        port: 4200,
+        openPage: './index.html',
     },
     plugins: [
         new HTMLWebpackPlugin({
             template: './index.html',
-            minify: {
-                collapseWhitespace: isProd
-            }
+            filename: 'index.html',
+            chunks: [],
+            minify: { collapseWhitespace: isProd }
+        }),
+        new HTMLWebpackPlugin({
+            template: './index2.html',
+            filename: 'index2.html',
+            chunks: [],
+            minify: { collapseWhitespace: isProd }
         }),
         new CleanWebpackPlugin(),
         new CopyWebpackPlugin({
@@ -57,8 +71,10 @@ module.exports = {
                 }
             ]
         }),
+        new FixStyleOnlyEntriesPlugin(),
         new MiniCssExtractPlugin({
-            filename: 'bundle.css'
+            filename: "[name].css",
+            chunkFilename: "[name].css"
         })
     ],
     module: {
